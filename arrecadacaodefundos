@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifa Solidária</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e6f2e6;
+      color: #333;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+    }
+    .box {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    .info {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .pix {
+      background: #f0fff0;
+      padding: 10px;
+      border: 1px dashed #4caf50;
+      font-weight: bold;
+      text-align: center;
+    }
+    .whatsapp {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .whatsapp a {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Rifa Solidária</h1>
+  <div class="box">
+    <div class="info">
+      <strong>Ajude na compra de um aparelho auditivo para Dona Maria, 86 anos.</strong>
+    </div>
+
+    <div class="info">
+      🎁 <strong>Prêmio:</strong> Concorra a um PIX de <strong>R$ 250</strong>
+    </div>
+
+    <div class="info">
+      📌 <strong>Valores:</strong><br/>
+      ▫️ 1 número – R$ 10<br/>
+      ▫️ 3 números – R$ 25
+    </div>
+
+    <div class="info">
+      📅 <strong>Compre até:</strong> 15 de junho<br/>
+      🎲 <strong>Sorteio:</strong> Domingo, 28/06, pela Loteria Federal
+    </div>
+
+    <div class="pix">
+      💳 <strong>Pagamento via PIX:</strong><br/>
+      Chave: <span id="pix">986.470.674-87</span>
+    </div>
+
+    <div class="whatsapp">
+      <p>📩 Envie o comprovante para:</p>
+      <a href="https://wa.me/5511945758028" target="_blank">📱 (11) 94575-8028</a>
+    </div>
+  </div>
+</body>
+</html>
