@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rifa Interativa - Escolha seus números</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  h2 { text-align: center; }
+  #numbers {
+    display: grid;
+    grid-template-columns: repeat(25, 1fr);
+    gap: 5px;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  .number {
+    padding: 8px 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .number.selected {
+    background-color: #4caf50;
+    color: white;
+  }
+  .number.sold {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+  #btnSend {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 25px;
+    font-size: 16px;
+    background-color: #25d366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  #btnSend:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+
+<h2>Escolha seus números para a rifa</h2>
+<p style="text-align:center;">Clique nos números disponíveis para selecionar. Os números em cinza já foram vendidos.</p>
+
+<div id="numbers"></div>
+
+<button id="btnSend" disabled>Enviar para WhatsApp</button>
+
+<script>
+// Lista dos números já vendidos - atualize conforme necessidade
+const soldNumbers = [3, 5, 12, 45, 78, 123, 250, 333, 400]; // exemplo, atualize essa lista
+
+const totalNumbers = 500;
+const numbersContainer = document.getElementById('numbers');
+const btnSend = document.getElementById('btnSend');
+
+let selectedNumbers = new Set();
+
+function createNumberElement(num) {
+  const span = document.createElement('span');
+  span.textContent = num.toString().padStart(3, '0');
+  span.classList.add('number');
+  if (soldNumbers.includes(num)) {
+    span.classList.add('sold');
+  } else {
+    span.addEventListener('click', () => toggleSelect(num, span));
+  }
+  return span;
+}
+
+function toggleSelect(num, element) {
+  if (selectedNumbers.has(num)) {
+    selectedNumbers.delete(num);
+    element.classList.remove('selected');
+  } else {
+    selectedNumbers.add(num);
+    element.classList.add('selected');
+  }
+  btnSend.disabled = selectedNumbers.size === 0;
+}
+
+function buildNumbersGrid() {
+  for (let i = 1; i <= totalNumbers; i++) {
+    numbersContainer.appendChild(createNumberElement(i));
+  }
+}
+
+btnSend.addEventListener('click', () => {
+  if (selectedNumbers.size === 0) return;
+
+  const nums = Array.from(selectedNumbers).sort((a,b) => a - b);
+  const message = `Olá, gostaria de reservar os números da rifa: ${nums.map(n => n.toString().padStart(3,'0')).join(', ')}`;
+  const phone = '5511945758028'; // seu número com código do país (Brasil)
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+  window.open(url, '_blank');
+});
+
+buildNumbersGrid();
+</script>
+
+</body>
+</html>
