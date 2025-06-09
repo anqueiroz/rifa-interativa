@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Rifa Solidária</title>
+  <style>
+    body {
+      background: #edf7f0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    h2 {
+      color: #2c7a4b;
+    }
+
+    .info {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .number {
+      padding: 12px;
+      background: #e0f2e9;
+      border: 1px solid #2c7a4b;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .number:hover {
+      background: #b2dfcc;
+    }
+
+    .number.selected {
+      background: #2c7a4b;
+      color: white;
+      pointer-events: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #25d366;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎯 Rifa Solidária</h2>
+    <div class="info">
+      <p><strong>Ajude na compra de um aparelho auditivo para Dona Maria, 86 anos.</strong></p>
+      <p><strong>🎁 Prêmio:</strong> Concorra a um PIX de R$ 250</p>
+      <p><strong>📌 Valores:</strong><br>
+         ▫ 1 número – R$ 10<br>
+         ▫ 3 números – R$ 25</p>
+      <p><strong>📅 Compre até:</strong> 27 de junho<br>
+         <strong>🎲 Sorteio:</strong> Domingo, 28/06, pela Loteria Federal</p>
+      <p><strong>💳 Pagamento via PIX:</strong><br>
+         Chave: 986.470.674-87</p>
+    </div>
+
+    <div class="grid" id="numberGrid">
+      <!-- Números inseridos via JavaScript -->
+    </div>
+
+    <button id="whatsappBtn" disabled>📤 Enviar para WhatsApp</button>
+  </div>
+
+  <script>
+    const grid = document.getElementById("numberGrid");
+    const whatsappBtn = document.getElementById("whatsappBtn");
+    let selectedNumber = null;
+
+    // Gera os 200 números
+    for (let i = 1; i <= 200; i++) {
+      const div = document.createElement("div");
+      div.className = "number";
+      div.textContent = i.toString().padStart(3, '0');
+      div.addEventListener("click", function () {
+        if (selectedNumber) {
+          selectedNumber.classList.remove("selected");
+        }
+        selectedNumber = div;
+        div.classList.add("selected");
+        whatsappBtn.disabled = false;
+      });
+      grid.appendChild(div);
+    }
+
+    // Ação do botão do WhatsApp
+    whatsappBtn.addEventListener("click", function () {
+      if (selectedNumber) {
+        const number = selectedNumber.textContent;
+        const mensagem = `Olá! Gostaria de confirmar minha participação na Rifa Solidária com o número ${number}.`;
+        const phone = "11945758028";
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, "_blank");
+      }
+    });
+  </script>
+</body>
+</html>
