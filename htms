@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Seleção de Números - Venda</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  h1 { margin-bottom: 10px; }
+  #numbers { max-height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+  .number-item { display: inline-block; width: 50px; margin: 3px; padding: 5px; cursor: pointer; border-radius: 4px; text-align: center; user-select: none; }
+  .available { background-color: #d1e7dd; color: #0f5132; }
+  .selected { background-color: #0d6efd; color: white; }
+  .blocked { background-color: #f8d7da; color: #842029; cursor: not-allowed; }
+  #summary { margin-top: 15px; font-weight: bold; }
+  #pix-info { margin-top: 15px; padding: 10px; background: #f8f9fa; border: 1px solid #ccc; border-radius: 5px; }
+  #qr-code { margin-top: 10px; }
+  #whatsapp-link { margin-top: 10px; display: inline-block; padding: 10px 15px; background-color: #25D366; color: white; text-decoration: none; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h1>Selecione os números para compra</h1>
+<p>Cada número custa R$10,00 isoladamente. A cada 3 números, pacote promocional de R$25,00.</p>
+
+<div id="numbers"></div>
+
+<div id="summary">Selecionados: 0 | Total: R$ 0,00</div>
+
+<div id="pix-info" style="display:none;">
+  <div><strong>Pagamento via PIX</strong></div>
+  <div>Chave PIX: <em>CPF Maria Jose 986.470.674-87</em></div>
+  <div id="qr-code"></div>
+  <div>
+    <a id="whatsapp-link" href="#" target="_blank" rel="noopener noreferrer">Enviar comprovante pelo WhatsApp</a>
+  </div>
+</div>
+
+<script>
+  // Configuração dos números pagos (bloqueados) - vazio por enquanto
+  const blockedNumbers = new Set([
+    // Exemplo para bloquear números: 5, 10, 20
+    // 5, 10, 20
+  ]);
+
+  const numbersContainer = document.getElementById('numbers');
+  const summary = document.getElementById('summary');
+  const pixInfo = document.getElementById('pix-info');
+  const whatsappLink = document.getElementById('whatsapp-link');
+  const qrCodeDiv = document.getElementById('qr-code');
+
+  let selectedNumbers = new Set();
+
+  // Gera os números 1 a 1500
+  function generateNumbers() {
+    for(let i = 1; i <= 1500; i++) {
+      const div = document.createElement('div');
+      div.textContent = i;
+      div.classList.add('number-item');
+      if(blockedNumbers.has(i)) {
+        div.classList.add('blocked');
+      } else {
+        div.classList.add('available');
+        div.addEventListener('click', () => toggleSelect(i, div));
+      }
+      numbersContainer.appendChild(div);
+    }
+  }
+
+  // Selecionar/deselecionar número
+  function toggleSelect(number, element) {
+    if(selectedNumbers.has(number)) {
+      selectedNumbers.delete(number);
+      element.classList.remove('selected');
+      element.classList.add('available');
+    } else {
+      selectedNumbers.add(number);
+      element.classList.add('selected');
+      element.classList.remove('available');
+    }
+    updateSummary();
+  }
+
+  // Atualiza resumo e valor total
+  function updateSummary() {
+    const count = selectedNumbers.size;
+    const setsOf3 = Math.floor(count / 3);
+    const remainder = count % 3;
+    const total = setsOf3 * 25 + remainder * 10;
+
+    summary.textContent = `Selecionados: ${count} | Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+
+    if(count > 0) {
+      pixInfo.style.display = 'block';
+      gerarQRCode(total);
+      gerarLinkWhatsApp(total);
+    } else {
+      pixInfo.style.display = 'none';
+      qrCodeDiv.innerHTML = '';
+      whatsappLink.href = '#';
+    }
+  }
+
+  // Gera um QR Code simples (baseado em texto PIX)
+  function gerarQRCode(valor) {
+    // Dados PIX simples em formato texto para QR code (simplificado)
+    const pixData = `00020126370014BR.GOV.BCB.PIX0114${formatCpf('98647067487')}520400005303986540${valor.toFixed(2)}5802BR5921Maria Jose6009Sao Paulo61080540900062070503***6304`;
+
+    // Para não depender de bibliotecas, vamos gerar um QR Code via API gratuita do Google Charts:
+    const urlQr = `https://chart.googleapis.com/chart?cht=qr&chs=150x150&chl=${encodeURIComponent(pixData)}`;
+    qrCodeDiv.innerHTML = `<img src="${urlQr}" alt="QR Code PIX" />`;
+  }
+
+  // Formata CPF só números para PIX (somente números)
+  function formatCpf(cpf) {
+    return cpf.replace(/\D/g,'');
+  }
+
+  // Gera link para WhatsApp com mensagem padrão
+  function gerarLinkWhatsApp(valor) {
+    const telefone = '55' + '11945758028'; // Número com DDD e código do Brasil
+    const msg = `Olá, realizei o pagamento via PIX no valor de R$ ${valor.toFixed(2).replace('.', ',')}. Segue o comprovante em anexo.`;
+    whatsappLink.href = `https://wa.me/${telefone}?text=${encodeURIComponent(msg)}`;
+  }
+
+  generateNumbers();
+  updateSummary();
+</script>
+
+</body>
+</html>
